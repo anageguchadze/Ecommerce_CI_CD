@@ -1,0 +1,44 @@
+name: Django CI/CD Pipeline
+
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgresadmin22
+          POSTGRES_DB: mydatabase
+        ports: 
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python 3.12.3
+    - uses: actions/setup-python@v2
+    - with:
+        python-version: 3.12.3
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run migrations
+      run: |
+        python manage.py migrate
+      env:
+        DATABASE_URL: postgres://postgres:postgresadmin22@localhost:5432/mydatabase
+    - name: Run tests
+      run: |
+        python manage.py test
+      env:
+        DATABASE_URL: postgres://postgres:postgresadmin22@localhost:5432/mydatabase
