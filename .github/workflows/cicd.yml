@@ -18,7 +18,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgresadmin22
-          POSTGRES_DB: mydatabase
+          POSTGRES_DB: ecommerce_db
         ports: 
           - 5432:5432
 
